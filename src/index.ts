@@ -1,11 +1,8 @@
-import express, { Application, Request, Response, NextFunction } from 'express'
+import express, { Application } from 'express'
+import { routes } from './routes'
 
 const app: Application = express()
 const port: number = 4000
 
-app.use('/', (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).send({ status: 200, data: 'Hello World' })
-  next
-})
-
+routes(app)
 app.listen(port, () => console.log(`Server is listening on port, ${port}`))
