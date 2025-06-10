@@ -1,7 +1,13 @@
 import { Request, Response } from 'express'
 import { createProductValidation, updateProductValidation } from '../validations/product.validation'
 import { logger } from '../utils/logger'
-import { addProduct, getAllProduct, getProductById, updateProductById } from '../services/product.service'
+import {
+  addProduct,
+  deleteProductById,
+  getAllProduct,
+  getProductById,
+  updateProductById
+} from '../services/product.service'
 // import ProductType from '../types/product.type'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -51,12 +57,35 @@ export const updateProductbyId = async (req: Request, res: Response) => {
   const { error, value } = updateProductValidation(req.body)
 
   if (error) {
-    logger.error(`ERROR: product-create = ${error.details[0].message}`)
+    logger.error(`ERROR: product-update = ${error.details[0].message}`)
     return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
   }
   try {
     await updateProductById(id, value)
     logger.info('Product updated successfully')
     res.status(200).send({ status: true, statusCode: 200, message: 'Product updated successfully' })
-  } catch (error) {}
+  } catch (error) {
+    logger.error(`ERROR: product-update = ${error}`)
+    return res.status(422).send({ status: false, statusCode: 422, message: error as any })
+  }
+}
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  const {
+    params: { id }
+  } = req
+
+  try {
+    const result = await deleteProductById(id)
+    if (result) {
+      logger.info('Delete Product Successfully')
+      return res.status(200).send({ status: true, statusCode: 200, message: 'Delete Product Successfully' })
+    } else {
+      logger.error(`ERROR: product-delete = Product with ID ${id} not found`)
+      return res.status(404).send({ status: false, statusCode: 404, message: 'Product not found' })
+    }
+  } catch (error) {
+    logger.error(`ERROR: product-delete = ${error}`)
+    return res.status(422).send({ status: false, statusCode: 422, message: (error as any).message })
+  }
 }

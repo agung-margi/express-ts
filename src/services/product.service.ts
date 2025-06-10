@@ -31,3 +31,12 @@ export const updateProductById = async (id: string, payload: ProductType) => {
   }
   return await productModel.findOneAndUpdate({ product_id: id }, { $set: payload })
 }
+
+export const deleteProductById = async (id: string) => {
+  if (!id) {
+    throw new Error('Product ID is required')
+  }
+  const result = await productModel.findOneAndDelete({ product_id: id })
+  console.log('result', result)
+  return result
+}
