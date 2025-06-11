@@ -7,6 +7,8 @@ import cors from 'cors'
 // connect to database
 import './utils/connectDB'
 
+import deserializedToken from './middleware/deserializedToken'
+
 const app: Application = express()
 const port: number = 4000
 
@@ -24,6 +26,9 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', '*')
   next()
 })
+
+// deserialized token middleware
+app.use(deserializedToken)
 
 routes(app)
 app.listen(port, () => logger.info(`Server is listening on port ${port}`))

@@ -7,7 +7,22 @@ export const createUserValidation = (payload: UserType) => {
     name: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().required(),
-    role: Joi.string().allow('', null)
+    role: Joi.string().valid('admin', 'user').default('user')
+  })
+  return schema.validate(payload)
+}
+
+export const createSessionValidation = (payload: UserType) => {
+  const schema = Joi.object({
+    email: Joi.string().required(),
+    password: Joi.string().required()
+  })
+  return schema.validate(payload)
+}
+
+export const refreshSessionValidation = (payload: UserType) => {
+  const schema = Joi.object({
+    refreshToken: Joi.string().required()
   })
   return schema.validate(payload)
 }

@@ -6,7 +6,7 @@ import { UserRouter } from './user.router'
 const _routes: Array<[string, Router]> = [
   ['/health', HealthRouter],
   ['/products', ProductRouter],
-  ['/users', UserRouter]
+  ['/auth', UserRouter]
 ]
 
 export const routes = (app: Application) => {
